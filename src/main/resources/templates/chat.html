@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,18 +8,21 @@
     <title>Home</title>
 </head>
 <body>
-<form>
+<form th:object="${chatForm}" action="#" th:action="@{/chat}" method="POST">
     <label for="username">Username:</label>
-    <input id="username" type="text">
+    <input id="username" type="text" th:field="*{username}">
     <label for="messageText">Message Text:</label>
-    <input id="messageText" type="text">
+    <input id="messageText" type="text" th:field="*{messageText}">
     <label for="messageType">Message Type: </label>
-    <select id="messageType">
-        <option selected>Say</option>
-        <option>Shout</option>
-        <option>Whisper</option>
+    <select id="messageType" th:field="*{messageType}">
+        <option th:each="type : ${allMessageTypes}"
+                th:value="${type}"
+                th:text="${type}">Say</option>
     </select>
     <input type="submit">
+    <div th:each="chatMessage : ${chatMessage}">
+        <span th:text="${chatMessage.username}">Username</span>: <span th:text="${chatMessage.message}">Hello, word!</span>
+    </div>
 </form>
 </body>
 </html>

@@ -1,41 +1,44 @@
 package com.udacity.jwdnd.review.service;
 
+import com.udacity.jwdnd.review.mapper.MessageMapper;
 import com.udacity.jwdnd.review.model.ChatForm;
 import com.udacity.jwdnd.review.model.ChatMessage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class MessageService {
-    private List<ChatMessage> chatMessages;
+    private MessageMapper messageMapper;
+
+    public MessageService(MessageMapper messageMapper) {
+        this.messageMapper = messageMapper;
+    }
 
     @PostConstruct
     public void postConstructor() {
         System.out.println("Creating Message Service bean");
-        this.chatMessages = new ArrayList<>();
     }
 
-    public void addMessage(ChatForm chatForm){
+    public void addMessage(ChatForm chatForm) {
         ChatMessage newMessage = new ChatMessage();
         newMessage.setUsername(chatForm.getUsername());
-        switch (chatForm.getMessageType()){
+        switch (chatForm.getMessageType()) {
             case "Say":
-                newMessage.setMessage(chatForm.getMessageText());
+                newMessage.setMessageText(chatForm.getMessageText());
                 break;
             case "Shout":
-                newMessage.setMessage(chatForm.getMessageText().toUpperCase());
+                newMessage.setMessageText(chatForm.getMessageText().toUpperCase());
                 break;
             case "Whisper":
-                newMessage.setMessage(chatForm.getMessageText().toLowerCase());
+                newMessage.setMessageText(chatForm.getMessageText().toLowerCase());
                 break;
         }
-        this.chatMessages.add(newMessage);
+        messageMapper.addMessage(newMessage);
     }
 
     public List<ChatMessage> getChatMessages() {
-        return chatMessages;
+        return messageMapper.getAllMessages();
     }
 }
